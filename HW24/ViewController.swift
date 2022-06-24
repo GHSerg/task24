@@ -41,21 +41,14 @@ class ViewController: UIViewController {
 
 final class GetNameEndpoint: ObjectResponseEndpoint<String> {
     
-    let publicKey = "96732abd690b89d71a8daeccb564a4be"
-    let privateKey = "6713c39a1931bb5bfef0fe63be2eb22bb3aa096a"
-    let tsValue = "1"
-    
     override var method: RESTClient.RequestType { return .get }
-    override var path: String { "/v1/public/characters/1010743/series" }
+    override var path: String { "/v1/cards" }
     
     override init() {
         super.init()
         
 
-        queryItems = [URLQueryItem(name: "ts",value: tsValue),
-                      URLQueryItem(name: "apikey",value: publicKey),
-                      URLQueryItem(name: "hash",value: (tsValue + privateKey + publicKey).md5),
-        ]
+        queryItems = [URLQueryItem(name: "name", value: "Opt|Black Lotus")]
     }
 }
 
@@ -78,16 +71,5 @@ func decodeJSONOld() {
     }
 }
 
-extension String {
-    var md5: String {
-        let data = Data(self.utf8)
-        let hash = data.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> [UInt8] in
-            var hash = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-            CC_MD5(bytes.baseAddress, CC_LONG(data.count), &hash)
-            return hash
-        }
-        return hash.map { String(format: "%02x", $0) }.joined()
-    }
-}
 
 
