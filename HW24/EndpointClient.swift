@@ -17,7 +17,7 @@ public enum PureResult<E> {
     case failure(E)
 }
 
-
+//
 public final class EndpointClient {
 
     // MARK: - Types
@@ -69,7 +69,8 @@ public final class EndpointClient {
                        completionHandler: completionHandler)
     }
 
-    public func executeRequest(_ endpoint: EmptyResponseEndpoint, completion: @escaping SuccessEndpointCompletion) {
+    public func executeRequest(_ endpoint: EmptyResponseEndpoint,
+                               completion: @escaping SuccessEndpointCompletion) {
         guard let requestURL = makeRequestUrl(path: endpoint.path, queryItems: endpoint.queryItems) else {
             completion(.failure(EndpointClientError.wrongURL))
             return
@@ -201,7 +202,10 @@ public final class EndpointClient {
     {
         guard let data = data else { throw EndpointClientError.noParsingData }
         do {
-            print("data = \(String(describing: (String(data: data, encoding: .utf8))))")
+        // print("data = \(String(describing: (String(data: data, encoding: .utf8))))")
+            let cards = try JSONDecoder().decode(CardsJSON.self, from: data)
+          //  print("Имя карты: \(name)")
+            print(cards)
             return try decoder.decode(D.self, from: data)
         } catch {
             throw error
@@ -218,11 +222,12 @@ extension JSONDecoder {
     class func webApiDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .webApiCustomDateDecodingStrategy
-        
+
         return decoder
     }
 }
 
+//декодирование даты
 extension JSONDecoder.DateDecodingStrategy {
     
     /// Переменная хранит в себе политику распознавания дат, которые приходят от WebApi

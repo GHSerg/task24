@@ -9,17 +9,17 @@ import Foundation
 import FileProvider
 
 struct CardsJSON: Decodable {
-    let cardJSON: [CardJSON]
+    let cards: [CardJSON]
 }
 
 struct CardJSON: Decodable {
-    var name: String?
-    var manaCost: String?
-    var type: String?
-    var rarity: String?
-    var setName: String?
-    var artist: String?
-    var number: String?
+    let name: String?
+    let manaCost: String?
+    let type: String?
+    let rarity: String?
+    let setName: String?
+    let artist: String?
+    let number: String?
 }
 
 

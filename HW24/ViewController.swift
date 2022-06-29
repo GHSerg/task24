@@ -16,6 +16,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         executeCall()
+        decodeJSONOld()
     }
     
     func executeCall() {
@@ -27,7 +28,8 @@ class ViewController: UIViewController {
             switch result {
             case .success(let team):
                 print("team = \(team)")
-                
+                print("-------------------------------------------------------")
+                decodeJSONOld()
             case .failure(let error):
                 print(error)
             }
@@ -52,17 +54,16 @@ final class GetNameEndpoint: ObjectResponseEndpoint<String> {
     }
 }
 
-
 func decodeJSONOld() {
     let str = """
-        {\"team\": [\"ios\", \"android\", \"backend\"]}
+        {\"cards\": [\"name\", \"manaCost\", \"type\", \"rarity\", \"setName\", \"artist\", \"number\"]}
     """
     
     let data = Data(str.utf8)
 
     do {
         if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-            if let names = json["team"] as? [String] {
+            if let names = json["cards"] as? [String] {
                 print(names)
             }
         }
