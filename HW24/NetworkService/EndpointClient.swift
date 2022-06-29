@@ -17,19 +17,19 @@ public enum PureResult<E> {
     case failure(E)
 }
 
-
+//
 public final class EndpointClient {
 
     // MARK: - Types
 
-    public typealias ObjectEndpointCompletion<Object: Decodable> = (Result<Object, Error>, HTTPURLResponse?) -> ()
-    public typealias SuccessEndpointCompletion = (PureResult<Error>) -> ()
+    public typealias ObjectEndpointCompletion<Object: Decodable> = (Result<Object, Error>, HTTPURLResponse?) -> Void
+    public typealias SuccessEndpointCompletion = (PureResult<Error>) -> Void
 
     // MARK: - Private Properties
 
     private let applicationSettings: ApplicationSettingsService
-    private var masterServerURL: String { "https://gateway.marvel.com" }
-//    private var masterServerURL: String { "http://localhost:5055" }
+    private var masterServerURL: String { "https://api.magicthegathering.io" } // адрес сервера с которого будем тянуть информацию
+    //    private var masterServerURL: String { "http://localhost:5055" }
 
     // MARK: - Initialization
 
@@ -40,7 +40,7 @@ public final class EndpointClient {
     // MARK: - Public Methods
 
     public func executeRequest<Object: Decodable>(_ endpoint: ObjectResponseEndpoint<Object>,
-                                           completion: @escaping ObjectEndpointCompletion<Object>) {
+                                                  completion: @escaping ObjectEndpointCompletion<Object>) {
         guard let requestURL = makeRequestUrl(path: endpoint.path, queryItems: endpoint.queryItems) else {
             completion(.failure(EndpointClientError.wrongURL), nil)
             return
@@ -69,7 +69,8 @@ public final class EndpointClient {
                        completionHandler: completionHandler)
     }
 
-    public func executeRequest(_ endpoint: EmptyResponseEndpoint, completion: @escaping SuccessEndpointCompletion) {
+    public func executeRequest(_ endpoint: EmptyResponseEndpoint,
+                               completion: @escaping SuccessEndpointCompletion) {
         guard let requestURL = makeRequestUrl(path: endpoint.path, queryItems: endpoint.queryItems) else {
             completion(.failure(EndpointClientError.wrongURL))
             return
@@ -117,7 +118,7 @@ public final class EndpointClient {
             }
             return newRequestURL
         }
-        
+
         return requestURL
     }
 
@@ -133,7 +134,7 @@ public final class EndpointClient {
 
     private func objectResponseCompletionHandler<Object: Decodable>(
         completion: @escaping ObjectEndpointCompletion<Object>
-        ) -> RESTClient.ResultCompletionHandler {
+    ) -> RESTClient.ResultCompletionHandler {
         return { result in
             switch result {
             case .success(let data, let response):
@@ -157,7 +158,7 @@ public final class EndpointClient {
 
     private func emptyResponseCompletionHandler(
         completion: @escaping SuccessEndpointCompletion
-        ) -> RESTClient.ResultCompletionHandler {
+    ) -> RESTClient.ResultCompletionHandler {
         return { result in
             switch result {
             case .success:
@@ -187,7 +188,7 @@ public final class EndpointClient {
         url: URL,
         headers: [String: String]?,
         body: String?
-        ) -> URLRequest {
+    ) -> URLRequest {
         var request = URLRequest(url: url) // уже содержит query items
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers
@@ -197,11 +198,19 @@ public final class EndpointClient {
 
     private func map<D: Decodable>(_ type: D.Type,
                                    data: Data?,
-                                   using decoder: JSONDecoder = .webApiDecoder()) throws -> D
-    {
+                                   using decoder: JSONDecoder = .webApiDecoder()) throws -> D {
         guard let data = data else { throw EndpointClientError.noParsingData }
         do {
-            print("data = \(String(describing: (String(data: data, encoding: .utf8))))")
+            let jsonData = try JSONDecoder().decode(CardsJSON.self, from: data)
+            jsonData.cards.forEach {
+                print(" Имя: \($0.name ?? "nil")\n",
+                       "Мановая стоимость: \($0.manaCost ?? "nil")\n",
+                       "Тип: \($0.type ?? "nil")\n",
+                       "Редкость: \($0.rarity ?? "nil")\n",
+                       "Название сета: \($0.setName ?? "nil")\n",
+                       "Художник: \($0.artist ?? "nil")\n",
+                       "Количество: \($0.number ?? "nil")\n")
+            }
             return try decoder.decode(D.self, from: data)
         } catch {
             throw error
@@ -214,34 +223,34 @@ func mainAsync(block: @escaping () -> Void) {
 }
 
 extension JSONDecoder {
-    
+
     class func webApiDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .webApiCustomDateDecodingStrategy
-        
+
         return decoder
     }
 }
 
+// декодирование даты
 extension JSONDecoder.DateDecodingStrategy {
-    
+
     /// Переменная хранит в себе политику распознавания дат, которые приходят от WebApi
     /// - "yyyy-MM-dd HH:mm:ssZ" - полный формат даты (с часовым поясом)
     static var webApiCustomDateDecodingStrategy: JSONDecoder.DateDecodingStrategy {
         return JSONDecoder.DateDecodingStrategy.custom { decoder -> Date in
             let container = try decoder.singleValueContainer()
             let dateString = try container.decode(String.self)
-            
+
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            
+
             guard let date = dateFormatter.date(from: dateString) else {
                 throw DecodingError.dataCorruptedError(
                     in: container, debugDescription: "Cannot decode date string \(dateString)")
             }
-            
+
             return date
         }
     }
 }
-

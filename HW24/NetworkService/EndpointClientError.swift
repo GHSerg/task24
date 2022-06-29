@@ -28,7 +28,7 @@ extension EndpointClientError: LocalizedError {
     }
 }
 
-/// MARK: - Equatable
+// MARK: - Equatable
 
 extension EndpointClientError: Equatable {
     public static func == (lhs: EndpointClientError, rhs: EndpointClientError) -> Bool {
@@ -49,4 +49,3 @@ extension EndpointClientError: Equatable {
     }
 
 }
-
