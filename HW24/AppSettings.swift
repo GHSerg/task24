@@ -29,21 +29,21 @@ public final class ApplicationSettingsService {
         static let didShowGetAccountFreeScreen = "didShowGetAccountFreeScreen"
         static let isUserOrganic = "isUserOrganic"
     }
-    
+
     // MARK: - Types
-    
+
     typealias CompletionHandler = (Data?, URLResponse?, Error?) -> Void
-    
+
     enum Const {
         static let keyReceiptFileModificationTimeStamp = "receipt_file_modification_timestamp"
         static let lastReceiptFileName = "last_receipt.json"
     }
-    
+
     enum ShowEventType {
         case tutorial
         case allowObjects
         case installLanding
-        
+
         var key: String {
             switch self {
             case .allowObjects:
@@ -55,13 +55,13 @@ public final class ApplicationSettingsService {
             }
         }
     }
-    
+
     // MARK: - Private Properties
 
     private let passwordLock = NSLock()
-    
+
     // MARK: - Initialization
-    
+
     // MARK: - Public
-  
+
 }

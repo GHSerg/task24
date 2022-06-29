@@ -20,6 +20,15 @@ struct CardJSON: Decodable {
     let setName: String?
     let artist: String?
     let number: String?
+
+//    enum CodingKeys: String, CodingKey {
+//
+//        case name = "name"
+//        case manaCost = "manaCost"
+//        case type = "type"
+//        case rarity = "rarity"
+//        case setName = "setName"
+//        case artist = "artist"
+//        case number = "number"
+//          }
 }
-
-

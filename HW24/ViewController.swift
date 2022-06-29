@@ -9,16 +9,16 @@ import UIKit
 import CommonCrypto
 
 class ViewController: UIViewController {
-    
+
     private let endpointClient = EndpointClient(applicationSettings: ApplicationSettingsService())
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         executeCall()
         decodeJSONOld()
     }
-    
+
     func executeCall() {
         let endpoint = GetNameEndpoint()
         let completion: EndpointClient.ObjectEndpointCompletion<String> = { result, response in
@@ -34,21 +34,19 @@ class ViewController: UIViewController {
                 print(error)
             }
         }
-        
+
         endpointClient.executeRequest(endpoint, completion: completion)
     }
-
 
 }
 
 final class GetNameEndpoint: ObjectResponseEndpoint<String> {
-    
+
     override var method: RESTClient.RequestType { return .get }
     override var path: String { "/v1/cards" }
-    
+
     override init() {
         super.init()
-        
 
         queryItems = [URLQueryItem(name: "name", value: "Opt|Black Lotus")]
     }
@@ -58,7 +56,7 @@ func decodeJSONOld() {
     let str = """
         {\"cards\": [\"name\", \"manaCost\", \"type\", \"rarity\", \"setName\", \"artist\", \"number\"]}
     """
-    
+
     let data = Data(str.utf8)
 
     do {
@@ -71,6 +69,3 @@ func decodeJSONOld() {
         print("Failed to load: \(error.localizedDescription)")
     }
 }
-
-
-

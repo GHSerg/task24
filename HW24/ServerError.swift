@@ -8,7 +8,7 @@
 import Foundation
 
 public enum ServerError: Error {
-    
+
     // problem with sending request like no internet and others
     case networkProblem
     // our server is fallen down, most of the time it's happening case 500th error
@@ -19,13 +19,13 @@ public enum ServerError: Error {
     // first value code status
     // second value error message
     case invalidRequest((Int, String))
-    
+
 }
 
 // MARK: - LocalizedError
 
 extension ServerError: LocalizedError {
-    
+
     public var errorDescription: String? {
         switch self {
         case .networkProblem: return ""
@@ -34,13 +34,13 @@ extension ServerError: LocalizedError {
         case .invalidRequest(_, let message): return message
         }
     }
-    
+
 }
 
-/// MARK: - Equatable
+// MARK: - Equatable
 
 extension ServerError: Equatable {
-    
+
     public static func == (lhs: ServerError, rhs: ServerError) -> Bool {
         switch (lhs, rhs) {
         case (.networkProblem, .networkProblem):
@@ -56,6 +56,5 @@ extension ServerError: Equatable {
             return false
         }
     }
-    
-}
 
+}
