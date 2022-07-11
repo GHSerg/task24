@@ -16,7 +16,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         executeCall()
-        decodeJSONOld()
     }
 
     func executeCall() {
@@ -29,7 +28,6 @@ class ViewController: UIViewController {
             case .success(let team):
                 print("team = \(team)")
                 print("-------------------------------------------------------")
-                decodeJSONOld()
             case .failure(let error):
                 print(error)
             }
@@ -49,23 +47,5 @@ final class GetNameEndpoint: ObjectResponseEndpoint<String> {
         super.init()
 
         queryItems = [URLQueryItem(name: "name", value: "Opt|Black Lotus")]
-    }
-}
-
-func decodeJSONOld() {
-    let str = """
-        {\"cards\": [\"name\", \"manaCost\", \"type\", \"rarity\", \"setName\", \"artist\", \"number\"]}
-    """
-
-    let data = Data(str.utf8)
-
-    do {
-        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-            if let names = json["cards"] as? [String] {
-                print(names)
-            }
-        }
-    } catch let error as NSError {
-        print("Failed to load: \(error.localizedDescription)")
     }
 }
