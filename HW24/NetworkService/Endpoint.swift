@@ -16,7 +16,7 @@ public class Endpoint {
         switch method {
         case .get:
             return ["Cache-Control": "no-cache"]
-            
+
         case .post, .put:
             return ["Content-Type": "application/json", // тип отправляемых данных {json/form-data/html} для post / put
                     "Accept": "application/json", // какой тип данных сервер сможет принять
@@ -27,9 +27,9 @@ public class Endpoint {
     public var parameters: [String: Any]?
     public var timeout: TimeInterval?
     public var queryItems: [URLQueryItem]?
-    
+
     public init() {
-        
+
     }
 }
 
