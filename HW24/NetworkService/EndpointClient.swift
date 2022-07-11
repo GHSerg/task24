@@ -29,7 +29,6 @@ public final class EndpointClient {
 
     private let applicationSettings: ApplicationSettingsService
     private var masterServerURL: String { "https://api.magicthegathering.io" } // адрес сервера с которого будем тянуть информацию
-    //    private var masterServerURL: String { "http://localhost:5055" }
 
     // MARK: - Initialization
 
@@ -201,16 +200,7 @@ public final class EndpointClient {
                                    using decoder: JSONDecoder = .webApiDecoder()) throws -> D {
         guard let data = data else { throw EndpointClientError.noParsingData }
         do {
-            let jsonData = try JSONDecoder().decode(CardsJSON.self, from: data)
-            jsonData.cards.forEach {
-                print(" Имя: \($0.name ?? "nil")\n",
-                       "Мановая стоимость: \($0.manaCost ?? "nil")\n",
-                       "Тип: \($0.type ?? "nil")\n",
-                       "Редкость: \($0.rarity ?? "nil")\n",
-                       "Название сета: \($0.setName ?? "nil")\n",
-                       "Художник: \($0.artist ?? "nil")\n",
-                       "Количество: \($0.number ?? "nil")\n")
-            }
+            print("data = \(String(describing: (String(data: data, encoding: .utf8))))")
             return try decoder.decode(D.self, from: data)
         } catch {
             throw error
