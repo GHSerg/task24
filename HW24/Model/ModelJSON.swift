@@ -8,11 +8,11 @@
 import Foundation
 import FileProvider
 
-struct CardsJSON: Decodable {
-    let cards: [CardJSON]
+struct Cards: Decodable {
+    let cards: [Card]
 }
 
-struct CardJSON: Decodable {
+struct Card: Decodable {
     let name: String?
     let manaCost: String?
     let type: String?
